@@ -1,6 +1,6 @@
 # Personal Expense Tracker
 
-A simple C# console application for managing personal income and expenses. The application allows users to record transactions, monitor spending and calculate their available balance.
+A simple C# console application for managing personal income and expenses. It allows users to record transactions, monitor spending, calculate their balance and review monthly expenditure.
 
 ## Features
 
@@ -8,29 +8,61 @@ A simple C# console application for managing personal income and expenses. The a
 - Record expense transactions.
 - Categorise transactions.
 - View transaction history.
-- View total income, expenses and current balance.
-- Calculate monthly expenditure.
+- View total income and expenses.
+- Calculate current account balance.
+- View monthly expenditure.
 - Delete transactions.
 - Save and load transaction data using JSON.
 - Validate user input.
 
 ## Technologies Used
 
-- C#
-- .NET 10
-- JSON
-- xUnit
+- **C#** – Application development
+- **.NET 10** – Development framework
+- **JSON** – Local data storage
+- **xUnit** – Automated unit testing
+- **Git and GitHub** – Version control and source code hosting
+- **Visual Studio Code** – Development environment
+
+## Screenshots
+
+### Main Menu
+
+![Personal Expense Tracker Main Menu](screenshots/main-menu.png)
+
+### Transaction History
+
+![Transaction History](screenshots/transaction-history.png)
+
+### Financial Summary
+
+![Financial Summary](screenshots/financial-summary.png)
+
+### Automated Test Results
+
+![Automated Test Results](screenshots/test-results.png)
 
 ## Project Structure
 
 ```text
 PersonalExpenseTracker/
 │
+├── PersonalExpenseTracker.Tests/
+│   ├── PersonalExpenseTracker.Tests.csproj
+│   └── UnitTest1.cs
+│
+├── screenshots/
+│   ├── main-menu.png
+│   ├── transaction-history.png
+│   ├── financial-summary.png
+│   └── test-results.png
+│
 ├── Program.cs
 ├── Transaction.cs
 ├── TransactionManager.cs
 ├── PersonalExpenseTracker.csproj
-└── README.md
+├── README.md
+└── .gitignore
 ```
 
 ## Requirements
@@ -38,40 +70,68 @@ PersonalExpenseTracker/
 - .NET 10 SDK
 - Visual Studio Code or Visual Studio
 
-## How to Run
+## Installation and Setup
 
-1. Clone or download the repository.
-2. Open the project directory in your terminal.
-3. Restore dependencies:
+Clone the repository:
+
+```bash
+git clone https://github.com/StevenMoleya/PersonalExpenseTracker.git
+```
+
+Navigate to the project directory:
+
+```bash
+cd PersonalExpenseTracker
+```
+
+Restore the project dependencies:
 
 ```bash
 dotnet restore
 ```
 
-4. Run the application:
+## Running the Application
+
+Start the application using:
 
 ```bash
 dotnet run
 ```
 
-## Running Tests
+The console menu provides access to the available transaction management features.
+
+## Running Automated Tests
 
 The project includes automated unit tests using xUnit.
 
-Navigate to the test project directory and execute:
+To execute the tests, run the following command from the main project directory:
 
-```bash
-dotnet test
+```powershell
+dotnet test .\PersonalExpenseTracker.Tests\PersonalExpenseTracker.Tests.csproj
 ```
+
+**Test results:** 7 passed, 0 failed.
 
 ## Data Storage
 
-Transaction information is stored locally in a JSON file. This allows recorded transactions to remain available when the application is closed and reopened.
+Transaction records are stored locally in a JSON file. This allows recorded transactions to remain available when the application is closed and reopened.
 
-## Purpose
+The transaction data is stored separately from the source code and is excluded from Git tracking.
 
-This project was developed to practise C# programming, object-oriented programming, data management, file handling and automated testing.
+## Project Purpose
+
+This project was developed to strengthen practical C# programming skills, particularly in:
+
+- Object-oriented programming
+- Classes and methods
+- Collections and data management
+- File handling and JSON serialization
+- Input validation
+- Unit testing
 
 ## Author
 
 **Steven Moleya**
+
+- GitHub: [StevenMoleya](https://github.com/StevenMoleya)
+- Project Repository: [Personal Expense Tracker](https://github.com/StevenMoleya/PersonalExpenseTracker)
