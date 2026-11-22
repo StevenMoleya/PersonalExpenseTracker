@@ -11,11 +11,43 @@ namespace PersonalExpenseTracker
     {
         private readonly List<Transaction> transactions = new();
 
-        private readonly string dataDirectory =
-            Path.Combine(AppContext.BaseDirectory, "data");
+        private readonly string dataDirectory;
+        private readonly bool migrateLegacyData;
 
         private string DataFile =>
             Path.Combine(dataDirectory, "transactions.json");
+
+        // Default storage location: Windows Local AppData
+        public TransactionManager()
+            : this(
+                Path.Combine(
+                    Environment.GetFolderPath(
+                        Environment.SpecialFolder.LocalApplicationData),
+                    "PersonalExpenseTracker"),
+                true)
+        {
+        }
+
+        // Allows tests to use their own temporary storage directory
+        public TransactionManager(string dataDirectory)
+            : this(dataDirectory, false)
+        {
+        }
+
+        private TransactionManager(
+            string dataDirectory,
+            bool migrateLegacyData)
+        {
+            if (string.IsNullOrWhiteSpace(dataDirectory))
+            {
+                throw new ArgumentException(
+                    "Data directory cannot be empty.",
+                    nameof(dataDirectory));
+            }
+
+            this.dataDirectory = dataDirectory;
+            this.migrateLegacyData = migrateLegacyData;
+        }
 
         public void AddTransaction(Transaction transaction)
         {
@@ -80,6 +112,21 @@ namespace PersonalExpenseTracker
         {
             try
             {
+                // Migrate existing data from the old build directory
+                if (migrateLegacyData && !File.Exists(DataFile))
+                {
+                    string legacyFile = Path.Combine(
+                        AppContext.BaseDirectory,
+                        "data",
+                        "transactions.json");
+
+                    if (File.Exists(legacyFile))
+                    {
+                        Directory.CreateDirectory(dataDirectory);
+                        File.Copy(legacyFile, DataFile);
+                    }
+                }
+
                 if (!File.Exists(DataFile))
                 {
                     return;
@@ -99,7 +146,8 @@ namespace PersonalExpenseTracker
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error loading transactions: {ex.Message}");
+                Console.WriteLine(
+                    $"Error loading transactions: {ex.Message}");
             }
         }
 
@@ -120,7 +168,8 @@ namespace PersonalExpenseTracker
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error saving transactions: {ex.Message}");
+                Console.WriteLine(
+                    $"Error saving transactions: {ex.Message}");
             }
         }
     }

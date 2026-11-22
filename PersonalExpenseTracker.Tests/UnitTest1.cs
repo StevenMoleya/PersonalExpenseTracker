@@ -8,24 +8,26 @@ namespace PersonalExpenseTracker.Tests;
 
 public class TransactionTests : IDisposable
 {
-    private static string TestDataFile =>
-        Path.Combine(AppContext.BaseDirectory, "data", "transactions.json");
+    private readonly string testDataDirectory;
 
     public TransactionTests()
     {
-        ClearSavedTransactions();
+        testDataDirectory = Path.Combine(
+            Path.GetTempPath(),
+            "PersonalExpenseTracker.Tests",
+            Guid.NewGuid().ToString("N"));
+    }
+
+    private TransactionManager CreateManager()
+    {
+        return new TransactionManager(testDataDirectory);
     }
 
     public void Dispose()
     {
-        ClearSavedTransactions();
-    }
-
-    private static void ClearSavedTransactions()
-    {
-        if (File.Exists(TestDataFile))
+        if (Directory.Exists(testDataDirectory))
         {
-            File.Delete(TestDataFile);
+            Directory.Delete(testDataDirectory, true);
         }
     }
 
@@ -64,7 +66,7 @@ public class TransactionTests : IDisposable
     [Fact]
     public void AddTransaction_ShouldAddTransactionAndAssignId()
     {
-        var manager = new TransactionManager();
+        var manager = CreateManager();
 
         var transaction = new Transaction(
             0, "Income", "Salary", 15000m,
@@ -80,7 +82,7 @@ public class TransactionTests : IDisposable
     [Fact]
     public void FinancialSummary_ShouldCalculateCorrectTotals()
     {
-        var manager = new TransactionManager();
+        var manager = CreateManager();
 
         manager.AddTransaction(new Transaction(
             0, "Income", "Salary", 15000m,
@@ -100,7 +102,7 @@ public class TransactionTests : IDisposable
     [Fact]
     public void MonthlyExpenses_ShouldCalculateCorrectTotal()
     {
-        var manager = new TransactionManager();
+        var manager = CreateManager();
 
         manager.AddTransaction(new Transaction(
             0, "Expense", "Food", 1200m,
@@ -118,7 +120,7 @@ public class TransactionTests : IDisposable
     [Fact]
     public void DeleteTransaction_ShouldRemoveTransaction()
     {
-        var manager = new TransactionManager();
+        var manager = CreateManager();
 
         manager.AddTransaction(new Transaction(
             0, "Expense", "Food", 500m,
@@ -133,14 +135,14 @@ public class TransactionTests : IDisposable
     [Fact]
     public void Transactions_ShouldPersistAfterLoading()
     {
-        var manager = new TransactionManager();
+        var manager = CreateManager();
 
         manager.AddTransaction(new Transaction(
             0, "Income", "Salary", 15000m,
             DateTime.Now, "Monthly salary"
         ));
 
-        var secondManager = new TransactionManager();
+        var secondManager = CreateManager();
         secondManager.LoadTransactions();
 
         Assert.Single(secondManager.GetTransactions());
